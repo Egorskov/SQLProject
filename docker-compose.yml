@@ -1,0 +1,32 @@
+services:
+  php-fpm:
+    image: php:8.0-fpm
+    volumes:
+      - ./src:/var/www/html
+    expose:
+      - "9000"
+
+  php-cli:
+    image: php:8.0-cli-alpine
+    command: php -S 0.0.0.0:8000 -t /var/www/html
+    volumes:
+      - ./src:/app
+
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - './src:/var/www/html'
+      - './docker/nginx/conf.d:/etc/nginx/conf.d'
+
+
+  postgresql:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydb
+      POSTGRES_HOST_AUTH_METHOD: trust
+
