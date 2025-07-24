@@ -1,17 +1,15 @@
 services:
-  php-fpm:
+  php:
     image: php:8.0-fpm
+    build:
+      context: .
+      dockerfile: Dockerfile
     volumes:
       - ./src:/var/www/html
+    command: php-fpm -F
+##    command: tail -f /dev/null
     expose:
       - "9000"
-
-  php-cli:
-    image: php:8.0-cli-alpine
-    command: php -S 0.0.0.0:8000 -t /var/www/html
-    volumes:
-      - ./src:/app
-
 
   nginx:
     image: nginx:latest
@@ -20,7 +18,6 @@ services:
     volumes:
       - './src:/var/www/html'
       - './docker/nginx/conf.d:/etc/nginx/conf.d'
-
 
   postgresql:
     image: postgres:latest
