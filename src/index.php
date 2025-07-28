@@ -1,29 +1,58 @@
 <?php
 
+namespace Database\Index;
+
 /**
  * php index.php add first_name last_name email -добавить пользователя
  * php index.php add random - добавить рандомного пользователям
  * php index.php delete ID - удалить пользователя по ID
  * php index.php list - показать список пользователей
  */
+require_once __DIR__ . '/jsondb.php';
 
-function initJsonDB(): void
-{
-    if(!file_exists('db.json')) {
-        file_put_contents('db.json', '{}');
+use Database\JsonDB\JsonDB;
+
+$db = new JsonDB();
+
+$argv = $_SERVER['argv'];
+$argc = count($argv);
+$command = $argv[1];
+
+if ($argc < 2){
+    helper();
+} elseif ($command == 'add'){
+    if ($argc < 3) {
+        echo "Error: Missing parameters for 'add' command\n";
+        helper();
     }
+    $arr = createUser($argv);
+    if ($arr === null) {
+        return;
+    }
+    $db->addUser($arr);
+} elseif ($command == 'delete') {
+    $id = $argv[2];
+    $db->deleteUser($id);
+} elseif ($command == 'list') {
+        $db->listUsers();
+} else {
+    helper();
 }
 
-function getJsonDB()
+function createUser($argv)
 {
-    initJsonDB();
-    $json = file_get_contents('db.json');
-    return json_decode($json, true);
-}
+    if (count($argv) < 5 && $argv[2] !== 'random') {
+        helper();
+        return null;
+    }
+      return $argv[2] == 'random' ?
+            ['first_name' => randomizer(),
+                "last_name" => randomizer(),
+                "email" => randomizer() . "@gmail.com"] :
+            ['first_name' => $argv[2],
+                "last_name" => $argv[3],
+                "email" => $argv[4]];
 
-function toParse($DB): void
-{
-    file_put_contents('db.json', json_encode($DB, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
 }
 
 function randomizer($length = 6): string
@@ -36,79 +65,11 @@ function randomizer($length = 6): string
     return $word;
 }
 
-function addUser($arr): void
+function helper (): void
 {
-    $DB = getJsonDB();
-    $ID = 1;
-    if (!empty($DB)){
-        $lastUser = end($DB);
-        $ID = $lastUser['ID'] + 1;
-    }
-    $arr = ['ID' => $ID] + $arr;
-    $DB[] = $arr;
-    toParse($DB);
-    echo "user added with ID = $ID\n";
-}
-
-function deleteUser($ID): void
-{
-    $DB = getJsonDB();
-    $found = false;
-    $newDB = array_filter($DB, function ($item) use ($ID, &$found) {
-        if ($item['ID'] == $ID) {
-            $found = true;
-            echo "user ID = $ID found \n";
-            echo "user ID = $ID deleted\n";
-            return false;
-        }
-        return true;
-    });
-    if (!$found) {
-        echo "user ID = $ID not found\n";
-    }
-    toParse($newDB);
-
-}
-
-function listUsers(): void
-{
-    $users = getJsonDB();
-    foreach ($users as $user) {
-        printf(
-            "ID: %d, Имя: %s, Фамилия: %s, Email: %s\n",
-            $user['ID'],
-            $user['first_name'],
-            $user['last_name'],
-            $user['email']
-        );
-    }
-}
-
-$argc = $_SERVER['argv'];
-$command = $argv[1];
-
-if ($command == 'add' && $argv[2] == 'random') {
-    $arr = [];
-    $arr['first_name'] = randomizer();
-    $arr['last_name'] = randomizer();
-    $arr['email'] = randomizer()."@gmail.com";
-    addUser($arr);
-} elseif ($command == 'add') {
-    $name = $argv[2];
-    $lastname = $argv[3];
-    $email = $argv[4];
-    $arr = [$argv[2], $argv[3], $argv[4]];
-    addUser($arr);
-} elseif ($command == 'delete') {
-    $id = $argv[2];
-    deleteUser($id);
-} elseif ($command == 'list') {
-        listUsers();
-} else {
     echo "invalid command\n";
-    echo "php index.php add first_name last_name email -добавить пользователя\n";
-    echo "php index.php add random - добавить рандомного пользователям\n";
-    echo "php index.php delete ID - удалить пользователя по ID\n";
-    echo "php index.php list - показать список пользователей";
+    echo "php index.php add first_name last_name email - add user\n";
+    echo "php index.php add random - add random user\n";
+    echo "php index.php delete ID - delete user with ID\n";
+    echo "php index.php list - show all users\n";
 }
-
