@@ -39,7 +39,7 @@ if ($argc < 2){
     helper();
 }
 
-function createUser($argv)
+function createUser($argv): ?array
 {
     if (count($argv) < 5 && $argv[2] !== 'random') {
         helper();
