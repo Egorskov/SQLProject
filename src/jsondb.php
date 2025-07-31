@@ -22,6 +22,7 @@ class JsonDB implements PsqlInterface
     {
         file_put_contents('db.json', json_encode($db, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
     }
+
     public function addUser($arr): void
     {
         if(!empty($arr)) {
