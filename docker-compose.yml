@@ -9,9 +9,6 @@ services:
     env_file:
       - .env
     working_dir: /var/www/html
-      - ./src:/var/www/html
-    env_file:
-      - .env
 
     command: php-fpm -F
     ##    command: tail -f /dev/null
