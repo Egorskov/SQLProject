@@ -14,9 +14,18 @@ require_once __DIR__ . '/psqldb.php';
 
 use Database\JsonDB\JsonDB;
 use Database\PsqlDB\PsqlDB;
+use Dotenv\Dotenv;
 
-//$db = new JsonDB();
-$db = new PsqlDB();
+$dotenv = Dotenv::createImmutable(__DIR__ . '/..');
+$dotenv->load();
+
+$select = $_ENV['DB_SOURCE'];
+if ( $select === 'psql' ){
+    $db = new PsqlDB();
+} elseif ($select === 'json' ){
+    $db = new JsonDB();
+}
+
 
 $argv = $_SERVER['argv'];
 $argc = count($argv);
