@@ -1,0 +1,16 @@
+{
+  "name": "sqlroject/src",
+  "description": "sqlproject",
+  "type": "project",
+  "require": {
+    "php": "^8.0",
+    "vlucas/phpdotenv": "^5.4",
+    "ext-pdo": "*",
+    "ext-pdo_pgsql": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  }
+}

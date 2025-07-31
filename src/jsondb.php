@@ -1,8 +1,11 @@
 <?php
 
-namespace Database\JsonDB;
+namespace App;
 
-class JsonDB {
+require_once __DIR__ . '/PsqlInterface.php';
+
+class JsonDB implements PsqlInterface
+{
     private $db;
     private $data;
 
@@ -19,7 +22,8 @@ class JsonDB {
     {
         file_put_contents('db.json', json_encode($db, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
     }
-    function addUser($arr): void
+
+    public function addUser($arr): void
     {
         if(!empty($arr)) {
             $ID = 1;
@@ -36,7 +40,7 @@ class JsonDB {
         }
     }
 
-    function deleteUser($ID): void
+    public function deleteUser($ID): void
     {
         $found = false;
         $newDB = array_filter((array)$this->data, function ($item) use ($ID, &$found) {
@@ -55,7 +59,7 @@ class JsonDB {
 
     }
 
-    function listUsers(): void
+    public function listUsers(): void
     {
         $users = $this->data;
         foreach ($users as $user) {

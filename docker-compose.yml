@@ -5,11 +5,16 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
+      - ./:/var/www/html
+    env_file:
+      - .env
+    working_dir: /var/www/html
       - ./src:/var/www/html
     env_file:
       - .env
+
     command: php-fpm -F
-##    command: tail -f /dev/null
+    ##    command: tail -f /dev/null
     expose:
       - "9000"
 
@@ -18,16 +23,15 @@ services:
     ports:
       - "80:80"
     volumes:
-      - './src:/var/www/html'
+      - './:/var/www/html'
       - './docker/nginx/conf.d:/etc/nginx/conf.d'
 
   postgresql:
     image: postgres:latest
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydb
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
       POSTGRES_HOST_AUTH_METHOD: trust
     ports:
-      - "5432:5432"
-
+      - "${DB_PORT}:5432"
