@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Index;
+namespace App;
 
 /**
  * php index.php add first_name last_name email -добавить пользователя
@@ -9,11 +9,10 @@ namespace Database\Index;
  * php index.php list - показать список пользователей
  */
 require_once __DIR__ . '/vendor/autoload.php';
-require_once __DIR__ . '/jsondb.php';
-require_once __DIR__ . '/psqldb.php';
+require_once __DIR__ . '/JsonDB.php';
+require_once __DIR__ . '/PsqlDB.php';
+require_once __DIR__ . '/PsqlInterface.php';
 
-use Database\JsonDB\JsonDB;
-use Database\PsqlDB\PsqlDB;
 use Dotenv\Dotenv;
 
 $dotenv = Dotenv::createImmutable(__DIR__ . '/..');

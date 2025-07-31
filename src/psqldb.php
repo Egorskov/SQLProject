@@ -1,16 +1,15 @@
 <?php
 
-namespace Database\PsqlDB;
+namespace App;
 
 use PDO;
-//use Dotenv\Dotenv;
 
-class PsqlDB
+require_once __DIR__ . '/PsqlInterface.php';
+
+class PsqlDB implements PsqlInterface
 {
     private $db;
     public function __construct() {
-       //$dotenv = Dotenv::createImmutable(__DIR__ . '/..');
-       //$dotenv->load();
         $this->db = new PDO(
             "pgsql:host=postgresql;dbname=".$_ENV['DB_NAME'], $_ENV['DB_USER'], $_ENV['DB_PASS']);
         $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
