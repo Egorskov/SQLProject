@@ -22,6 +22,8 @@ services:
     volumes:
       - './:/var/www/html'
       - './docker/nginx/conf.d:/etc/nginx/conf.d'
+    depends_on:
+      - php
 
   postgresql:
     image: postgres:latest

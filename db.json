@@ -1,20 +1,14 @@
-[
-    {
-        "ID": 1,
-        "first_name": "rlooup",
-        "last_name": "ktczot",
-        "email": "hjcvhz@gmail.com"
-    },
-    {
+{
+    "1": {
         "ID": 2,
         "first_name": "clxsks",
         "last_name": "vcqdrm",
         "email": "hgroev@gmail.com"
     },
-    {
+    "2": {
         "ID": 3,
-        "first_name": "jcvpbx",
-        "last_name": "jlrzqf",
-        "email": "zrnyfg@gmail.com"
+        "first_name": "mxcykj",
+        "last_name": "namcly",
+        "email": "hckmdc@gmail.com"
     }
-]
+}

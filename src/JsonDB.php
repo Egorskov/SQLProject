@@ -23,7 +23,7 @@ class JsonDB implements PsqlInterface
         file_put_contents('db.json', json_encode($db, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
     }
 
-    public function addUser($arr): void
+    public function addUser($arr): array
     {
         if(!empty($arr)) {
             $ID = 1;
@@ -34,42 +34,31 @@ class JsonDB implements PsqlInterface
             $arr = ['ID' => $ID] + $arr;
             $this->data[] = $arr;
             $this->parse($this->data);
-            echo "user added with ID = $ID\n";
+            return ['message'=> 'user added with ID = ' . $ID];
         } else {
-            echo "no data\n";
+            return ['message'=> 'no data'];
         }
     }
 
-    public function deleteUser($ID): void
+    public function deleteUser($ID): array
     {
         $found = false;
         $newDB = array_filter((array)$this->data, function ($item) use ($ID, &$found) {
             if ($item['ID'] == $ID) {
                 $found = true;
-                echo "user ID = $ID found \n";
-                echo "user ID = $ID deleted\n";
                 return false;
             }
             return true;
         });
         if (!$found) {
-            echo "user ID = $ID not found\n";
+            return ['message'=>'user ID = ' . $ID . ' not found'];
         }
         $this->parse($newDB);
-
+        return ['message'=>'user ID = ' . $ID . ' found. user deleted with ID = ' . $ID];
     }
 
-    public function listUsers(): void
+    public function listUsers() : array
     {
-        $users = $this->data;
-        foreach ($users as $user) {
-            printf(
-                "ID: %d, Имя: %s, Фамилия: %s, Email: %s\n",
-                $user['ID'],
-                $user['first_name'],
-                $user['last_name'],
-                $user['email']
-            );
-        }
+        return $this->data;
     }
 }
