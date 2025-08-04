@@ -59,7 +59,7 @@ function toCli($argv, $db): void
         foreach ($users as $user) {
             printf(
                 "ID: %d, Имя: %s, Фамилия: %s, Email: %s\n",
-                $user['ID'],
+                $user['id'],
                 $user['first_name'],
                 $user['last_name'],
                 $user['email']
@@ -80,10 +80,15 @@ function toHttp($db): void
     if ($method === 'GET' && $path === '/list') {
         $users = $db->listUsers();
         echo json_encode($users, JSON_UNESCAPED_UNICODE);
-    } elseif (($method === 'DELETE' || $method === 'GET' ) && str_starts_with($path, '/delete/')) {
+    } elseif ($method === 'DELETE' && str_starts_with($path, '/delete/')) {
         $parts = explode('/', $path);
         $id = (int)$parts[2];
         $result = $db->deleteUser($id);
+        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+    } elseif ($method === 'POST'  && $path === '/add') {
+        $rawData = file_get_contents('php://input');
+        $data = json_decode($rawData, true);
+        $result = $db->addUser($data);
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 }
