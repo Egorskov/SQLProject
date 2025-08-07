@@ -29,9 +29,9 @@ class JsonDB implements PsqlInterface
             $ID = 1;
             if (!empty($this->data)) {
                 $lastUser = end($this->data);
-                $ID = $lastUser['ID'] + 1;
+                $ID = $lastUser['id'] + 1;
             }
-            $arr = ['ID' => $ID] + $arr;
+            $arr = ['id' => $ID] + $arr;
             $this->data[] = $arr;
             $this->parse($this->data);
             return ['message'=> 'user added with ID = ' . $ID];
@@ -44,7 +44,7 @@ class JsonDB implements PsqlInterface
     {
         $found = false;
         $newDB = array_filter((array)$this->data, function ($item) use ($ID, &$found) {
-            if ($item['ID'] == $ID) {
+            if ($item['id'] == $ID) {
                 $found = true;
                 return false;
             }

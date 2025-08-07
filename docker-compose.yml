@@ -7,7 +7,7 @@ services:
     volumes:
       - ./:/var/www/html
     env_file:
-      - .env
+      - ./.env
     working_dir: /var/www/html
 
     command: php-fpm -F

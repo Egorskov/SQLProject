@@ -20,7 +20,7 @@ class PsqlDB implements PsqlInterface
     private function createTable(): void
     {
         $this->db->exec("
-    CREATE TABLE IF NOT EXISTS users (ID SERIAL PRIMARY KEY,
+    CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY,
     first_name TEXT NOT NULL,
     last_name TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE)
@@ -40,11 +40,11 @@ class PsqlDB implements PsqlInterface
     }
     function deleteUser($ID): array
     {
-        $check = $this->db->prepare("SELECT ID FROM users WHERE ID = ?");
+        $check = $this->db->prepare("SELECT ID FROM users WHERE id = ?");
         $check->execute([$ID]);
         $deleted = $check->fetch();
         if($deleted) {
-            $user = $this->db->prepare("DELETE FROM users WHERE ID = ?");
+            $user = $this->db->prepare("DELETE FROM users WHERE id = ?");
             $user->execute([$ID]);
             return ['message'=>'user ID = ' . $ID . ' found. user deleted with ID = ' . $ID];
         } else {

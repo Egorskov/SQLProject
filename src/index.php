@@ -8,14 +8,14 @@ namespace App;
  * php index.php delete ID - удалить пользователя по ID
  * php index.php list - показать список пользователей
  */
-require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/JsonDB.php';
 require_once __DIR__ . '/PsqlDB.php';
 require_once __DIR__ . '/PsqlInterface.php';
 
 use Dotenv\Dotenv;
 
-$dotenv = Dotenv::createImmutable(__DIR__ . '/..');
+$dotenv = Dotenv::createImmutable(__DIR__.'/..');
 $dotenv->load();
 
 $select = $_ENV['DB_SOURCE'];
