@@ -9,8 +9,8 @@ class JsonDB implements PsqlInterface
     private $db;
     private $data;
 
-    public function __construct($db = 'db.json') {
-        $this->db = $db;
+    public function __construct($db = null) {
+        $this->db = $db ?? dirname(__DIR__, 1) . '/db.json';
         if (!file_exists($this->db)) {
             file_put_contents($this->db, '{}');
         }
@@ -20,7 +20,7 @@ class JsonDB implements PsqlInterface
 
     public function parse($db): void
     {
-        file_put_contents('db.json', json_encode($db, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+        file_put_contents($this->db, json_encode($db, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
     }
 
     public function addUser($arr): array
