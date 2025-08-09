@@ -9,8 +9,8 @@ class JsonDB implements PsqlInterface
     private $db;
     private $data;
 
-    public function __construct($db = 'db.json') {
-        $this->db = $db;
+    public function __construct($db = null) {
+        $this->db = $db ?? dirname(__DIR__, 1) . '/db.json';
         if (!file_exists($this->db)) {
             file_put_contents($this->db, '{}');
         }
@@ -20,56 +20,45 @@ class JsonDB implements PsqlInterface
 
     public function parse($db): void
     {
-        file_put_contents('db.json', json_encode($db, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+        file_put_contents($this->db, json_encode($db, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
     }
 
-    public function addUser($arr): void
+    public function addUser($arr): array
     {
         if(!empty($arr)) {
             $ID = 1;
             if (!empty($this->data)) {
                 $lastUser = end($this->data);
-                $ID = $lastUser['ID'] + 1;
+                $ID = $lastUser['id'] + 1;
             }
-            $arr = ['ID' => $ID] + $arr;
+            $arr = ['id' => $ID] + $arr;
             $this->data[] = $arr;
             $this->parse($this->data);
-            echo "user added with ID = $ID\n";
+            return ['message'=> 'user added with ID = ' . $ID];
         } else {
-            echo "no data\n";
+            return ['message'=> 'no data'];
         }
     }
 
-    public function deleteUser($ID): void
+    public function deleteUser($ID): array
     {
         $found = false;
         $newDB = array_filter((array)$this->data, function ($item) use ($ID, &$found) {
-            if ($item['ID'] == $ID) {
+            if ($item['id'] == $ID) {
                 $found = true;
-                echo "user ID = $ID found \n";
-                echo "user ID = $ID deleted\n";
                 return false;
             }
             return true;
         });
         if (!$found) {
-            echo "user ID = $ID not found\n";
+            return ['message'=>'user ID = ' . $ID . ' not found'];
         }
         $this->parse($newDB);
-
+        return ['message'=>'user ID = ' . $ID . ' found. user deleted with ID = ' . $ID];
     }
 
-    public function listUsers(): void
+    public function listUsers() : array
     {
-        $users = $this->data;
-        foreach ($users as $user) {
-            printf(
-                "ID: %d, Имя: %s, Фамилия: %s, Email: %s\n",
-                $user['ID'],
-                $user['first_name'],
-                $user['last_name'],
-                $user['email']
-            );
-        }
+        return $this->data;
     }
 }
